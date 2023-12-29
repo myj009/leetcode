@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { secret } from "../middleware/auth";
 import { PrismaClient } from "@prisma/client";
 import cuid from "cuid";
+import { ZodError } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -33,6 +34,9 @@ export const adminSingup = async (req: CustomRequest, res: Response) => {
     res.status(201).send("User created successfully");
   } catch (e) {
     console.log(e);
+    if (e instanceof ZodError) {
+      return res.status(400).send(e.issues[0].message);
+    }
     res.status(500).send(e);
   }
 };
@@ -68,6 +72,9 @@ export const adminSignin = async (req: CustomRequest, res: Response) => {
       }
     );
   } catch (e) {
+    if (e instanceof ZodError) {
+      return res.status(400).send(e.issues[0].message);
+    }
     console.log(e);
     res.status(500).send(e);
   }

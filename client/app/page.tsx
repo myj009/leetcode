@@ -1,3 +1,5 @@
+"use client";
+import { useRecoilValue } from "recoil";
 import { Button } from "../components/ui/button";
 import {
   Card,
@@ -7,10 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
+import { userState } from "./_atoms/user";
 
 export default function Home() {
+  const user = useRecoilValue(userState);
   return (
     <main className="flex justify-center items-center">
+      <div className="">{user?.email}</div>
       <Card>
         <CardHeader>
           <CardTitle>Card Title</CardTitle>

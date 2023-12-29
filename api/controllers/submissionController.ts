@@ -3,6 +3,7 @@ import { Response } from "express";
 import cuid from "cuid";
 import { PrismaClient } from "@prisma/client";
 import { submissionSchema } from "../types/submission";
+import { ZodError } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -40,6 +41,9 @@ export const postSubmissions = async (req: CustomRequest, res: Response) => {
     res.status(201).json({ submission_id: sub.id });
   } catch (e) {
     console.log(e);
+    if (e instanceof ZodError) {
+      return res.status(400).send(e.issues[0].message);
+    }
     res.status(500).send(e);
   }
 };

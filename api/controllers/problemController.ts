@@ -2,6 +2,7 @@ import { CustomRequest, User } from "../types/user";
 import { Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { problemSchema } from "../types/problem";
+import { ZodError } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -26,6 +27,9 @@ export const postProblem = async (req: CustomRequest, res: Response) => {
     res.status(200).json({ id: problem.id });
   } catch (e) {
     console.log(e);
+    if (e instanceof ZodError) {
+      return res.status(400).send(e.issues[0].message);
+    }
     res.status(500).send(e);
   }
 };

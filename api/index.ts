@@ -2,6 +2,7 @@ import adminRoute from "./routes/adminRoute";
 import problemRoute from "./routes/problemRoute";
 import userRoute from "./routes/userRoute";
 import submissionRoute from "./routes/submissionRoute";
+import cors from "cors";
 
 const express = require("express");
 
@@ -9,6 +10,7 @@ const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(cors());
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
 app.use("/problems", problemRoute);

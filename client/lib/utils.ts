@@ -1,6 +1,17 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { toast } from "@/components/ui/use-toast";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export const launchToast = (title: string | undefined, description = "") => {
+  if (!title) {
+    return;
+  }
+  toast({
+    title,
+    description,
+  });
+};
