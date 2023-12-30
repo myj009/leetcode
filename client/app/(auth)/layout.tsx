@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Card,
@@ -9,8 +10,16 @@ import {
 } from "@/components/ui/card";
 import logo from "@/assets/leetcode.svg";
 import Image from "next/image";
+import { useRecoilValue } from "recoil";
+import { userState } from "../_atoms/user";
+import { useRouter } from "next/navigation";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+  const user = useRecoilValue(userState);
+  const router = useRouter();
+  if (user) {
+    router.replace("/problems");
+  }
   return (
     <div className="h-screen flex justify-center items-center">
       <Card className="flex flex-col items-center w-96">

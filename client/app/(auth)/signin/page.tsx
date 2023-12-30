@@ -11,8 +11,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
+import useAxios from "@/lib/customAxios";
 
-const url = "http://localhost:3001/user/signin";
+const url = "/user/signin";
 
 const page: React.FC = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -30,27 +31,24 @@ const page: React.FC = () => {
     }
 
     setIsLoading(true);
+
     try {
-      const res = await axios.post<{ token: string } | string>(url, {
+      const data = await useAxios<{ token: string }>(url, "post", {
         email,
         password,
       });
-      if (res.status !== 200) {
-        throw Error(res.data as string);
+      if (!data) {
+        return;
       }
-      const data = res.data as { token: string };
+
       let userData = await decodeJWTToken(data.token);
       localStorage.setItem("user", JSON.stringify(userData));
 
       setUser(userData);
-
       setIsLoading(false);
-      router.push("/");
+      router.push("/problems");
     } catch (e) {
       console.log(e);
-      const err = e as AxiosError;
-      launchToast(err.response?.data as string);
-      setIsLoading(false);
     }
   };
   return (

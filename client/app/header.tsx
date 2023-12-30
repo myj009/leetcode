@@ -1,0 +1,76 @@
+"use client";
+import { Separator } from "@/components/ui/separator";
+import React from "react";
+import logo from "@/assets/leetcode.svg";
+import Image from "next/image";
+import Link from "next/link";
+import { ThemeToggle } from "./themeToggle";
+import { useRecoilState } from "recoil";
+import { userState } from "./_atoms/user";
+import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const Header: React.FC = () => {
+  const [user, setUser] = useRecoilState(userState);
+  const router = useRouter();
+  const path = usePathname();
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    router.push("/signin");
+    setUser(null);
+  };
+
+  return (
+    <div className="w-full">
+      <div className="flex justify-between items-center w-full px-40 py-3">
+        <div className="flex gap-6 items-center">
+          <Image src={logo} alt="logo" width={24} height={24} />
+          <div>
+            <Button
+              className={`font-semibold text-md ${
+                path === "/problems" && "underline"
+              }`}
+              variant="link"
+              onClick={() => router.push("/problems")}
+            >
+              Problems
+            </Button>
+          </div>
+        </div>
+        <div className="flex gap-6 items-center">
+          {!user ? (
+            <div className="">
+              <Link className="text-[#FFA123]" href="/signup">
+                Register
+              </Link>
+              <span> or </span>
+              <Link className="text-[#FFA123]" href="/signin">
+                Sign In
+              </Link>
+            </div>
+          ) : (
+            <Button
+              className="text-[#FFA123] px-0"
+              onClick={logout}
+              variant="link"
+            >
+              Logout
+            </Button>
+          )}
+          <ThemeToggle />
+          {user && (
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          )}
+        </div>
+      </div>
+      <Separator />
+    </div>
+  );
+};
+
+export default Header;

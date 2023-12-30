@@ -4,12 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import axios, { AxiosError } from "axios";
+import useAxios from "@/lib/customAxios";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { launchToast } from "@/lib/utils";
 
-const url = "http://localhost:3001/user/signup";
+const url = "/user/signup";
 
 const Signup = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -40,20 +40,19 @@ const Signup = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(url, {
+      const data = await useAxios<string>(url, "post", {
         email,
         phone,
         password,
       });
-      if (res.status !== 201) {
-        throw Error(res.data);
+      if (!data) {
+        return;
       }
+
       setIsLoading(false);
       router.push("/signin");
     } catch (e) {
-      const err = e as AxiosError;
-      launchToast(err.response?.data as string);
-      setIsLoading(false);
+      console.log(e);
     }
   };
   return (

@@ -9,6 +9,6 @@ import {
 const router = Router();
 
 router.get("/", userAuthorization, getSubmissions);
-router.post("/", userAuthorization, postSubmissions);
+router.post("/:id", userAuthorization, postSubmissions);
 
 export default router;

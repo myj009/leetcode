@@ -26,19 +26,20 @@ export const postSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId!;
   try {
     const parsedReq = await submissionSchema.parseAsync(req.body);
+    const isCorrect = Math.random() > 0.5;
 
     const sub = await prisma.submission.create({
       data: {
         id: cuid(),
         userId: userId,
-        problemId: parsedReq.problem_id,
+        problemId: parseInt(req.params.id),
         code: parsedReq.code,
         lang: parsedReq.lang,
-        isCorrect: Math.random() > 0.5,
+        isCorrect,
       },
     });
 
-    res.status(201).json({ submission_id: sub.id });
+    res.status(201).json({ submission_id: sub.id, accepted: isCorrect });
   } catch (e) {
     console.log(e);
     if (e instanceof ZodError) {

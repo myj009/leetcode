@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "../components/ui/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import RecoilContextProvider from "./_utils/recoil";
+import Header from "./header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} h-screen flex flex-col`}>
         <RecoilContextProvider>
           <ThemeProvider
             attribute="class"
@@ -27,6 +28,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Header />
             {children}
           </ThemeProvider>
         </RecoilContextProvider>

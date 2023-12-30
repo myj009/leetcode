@@ -11,6 +11,21 @@ export const getProblems = async (req: CustomRequest, res: Response) => {
   res.status(200).json(problems);
 };
 
+export const getProblem = async (req: CustomRequest, res: Response) => {
+  const problemId = parseInt(req.params.id);
+  try {
+    const problem = await prisma.problem.findUnique({
+      where: {
+        id: problemId,
+      },
+    });
+    res.status(200).json(problem);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
+};
+
 export const postProblem = async (req: CustomRequest, res: Response) => {
   try {
     const parsedReq = await problemSchema.parseAsync(req.body);
