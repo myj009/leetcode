@@ -2,6 +2,7 @@
 import { Separator } from "@/components/ui/separator";
 import React from "react";
 import logo from "@/assets/leetcode.svg";
+import lightLogo from "@/assets/leetcode-light.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./themeToggle";
@@ -10,11 +11,13 @@ import { userState } from "./_atoms/user";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTheme } from "next-themes";
 
 const Header: React.FC = () => {
   const [user, setUser] = useRecoilState(userState);
   const router = useRouter();
   const path = usePathname();
+  const { theme } = useTheme();
 
   const logout = () => {
     localStorage.removeItem("user");
@@ -24,9 +27,14 @@ const Header: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center w-full px-40 py-3">
+      <div className="flex justify-between items-center w-full px-20 md:px-40 py-3">
         <div className="flex gap-6 items-center">
-          <Image src={logo} alt="logo" width={24} height={24} />
+          <Image
+            src={theme === "dark" ? logo : lightLogo}
+            alt="logo"
+            width={24}
+            height={24}
+          />
           <div>
             <Button
               className={`font-semibold text-md ${

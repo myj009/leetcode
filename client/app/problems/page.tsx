@@ -39,7 +39,9 @@ export default function Home() {
               return (
                 <TableRow
                   key={problem.id}
-                  onClick={() => router.push(`/problems/${problem.id}`)}
+                  onClick={() =>
+                    router.push(`/problems/${problem.id}/description`)
+                  }
                   className="hover:cursor-pointer"
                 >
                   <TableCell>{problem.id}</TableCell>
