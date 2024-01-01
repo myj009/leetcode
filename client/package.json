@@ -21,6 +21,7 @@
     "axios": "^1.6.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^3.0.6",
     "jose": "^5.2.0",
     "lucide-react": "^0.302.0",
     "marked": "^11.1.0",
@@ -30,6 +31,7 @@
     "react-dom": "^18",
     "react-resizable-panels": "^1.0.5",
     "recoil": "^0.7.7",
+    "recoil-persist": "^5.1.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7"
   },

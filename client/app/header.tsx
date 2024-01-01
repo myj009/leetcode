@@ -6,15 +6,14 @@ import lightLogo from "@/assets/leetcode-light.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./themeToggle";
-import { useRecoilState } from "recoil";
-import { userState } from "./_atoms/user";
+import { useUserState, userState } from "./_atoms/user";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
 
 const Header: React.FC = () => {
-  const [user, setUser] = useRecoilState(userState);
+  const [user, setUser] = useUserState()
   const router = useRouter();
   const path = usePathname();
   const { theme } = useTheme();

@@ -1,6 +1,5 @@
 "use client";
-import { useRecoilValue } from "recoil";
-import { userState } from "@/app/_atoms/user";
+import { useUserState } from "@/app/_atoms/user";
 import {
   Table,
   TableBody,
@@ -9,17 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useAxios from "@/hooks/useAxios";
+import { useAxiosArray } from "@/hooks/useAxios";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Problem } from "./types";
+import { ProblemSchema } from "./types";
 
 const url = "/problems";
 
 export default function Home() {
-  const user = useRecoilValue(userState);
-  const { data, loading } = useAxios<Problem[]>(url);
+  const [user] = useUserState();
+  const { data, loading } = useAxiosArray<ProblemSchema>(url);
+  // const loading = false;
+  // const data: ProblemSchema[] = [];
   const router = useRouter();
+  console.log("p0");
 
   return (
     <main className="flex flex-col p-40 justify-center items-start pt-20">

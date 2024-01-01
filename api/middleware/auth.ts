@@ -11,6 +11,7 @@ export const userAuthorization = (
   next: NextFunction
 ) => {
   const token = req.headers["authorization"];
+  console.log(token);
   if (!token) {
     return res.status(401).send("Unauthorized");
   }
@@ -27,7 +28,7 @@ export const userAuthorization = (
       return res.status(500).send("Internal server error");
     }
 
-    console.log(tokenObj);
+    // console.log(tokenObj);
     req.userId = tokenObj.userId;
     next();
   };
@@ -60,7 +61,7 @@ export const adminAuthorization = (
       if (tokenObj.userType !== "admin") {
         return res.status(401).send("Unauthorized");
       }
-      console.log(tokenObj);
+      // console.log(tokenObj);
       req.userId = tokenObj.userId;
       next();
     }

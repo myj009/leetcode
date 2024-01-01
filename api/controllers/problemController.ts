@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 export const getProblems = async (req: CustomRequest, res: Response) => {
   const problems = await prisma.problem.findMany();
+  console.log("getProblems");
   res.status(200).json(problems);
 };
 
@@ -19,6 +20,9 @@ export const getProblem = async (req: CustomRequest, res: Response) => {
         id: problemId,
       },
     });
+    if (!problem) {
+      return res.status(400).send("Problem not found");
+    }
     res.status(200).json(problem);
   } catch (e) {
     console.log(e);

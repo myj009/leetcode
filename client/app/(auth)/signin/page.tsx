@@ -1,5 +1,5 @@
 "use client";
-import { userState } from "@/app/_atoms/user";
+import { useUserState, userState } from "@/app/_atoms/user";
 import { decodeJWTToken } from "@/app/_utils/jwt";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +19,14 @@ const page: React.FC = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const setUser = useSetRecoilState(userState);
+  const [user, setUser] = useUserState();
+  console.log(user);
   const router = useRouter();
 
   const onSignin = async () => {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
+    console.log(email);
     if (!email || !password) {
       launchToast("Please fill all fields");
       return;
@@ -42,7 +44,7 @@ const page: React.FC = () => {
       }
 
       let userData = await decodeJWTToken(data.token);
-      localStorage.setItem("user", JSON.stringify(userData));
+      window.localStorage.setItem("user", JSON.stringify(userData));
 
       setUser(userData);
       setIsLoading(false);

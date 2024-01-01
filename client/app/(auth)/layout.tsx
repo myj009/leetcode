@@ -11,13 +11,13 @@ import {
 import logo from "@/assets/leetcode.svg";
 import lightLogo from "@/assets/leetcode-light.svg";
 import Image from "next/image";
-import { useRecoilValue } from "recoil";
-import { userState } from "../_atoms/user";
+import { useUserState, userState } from "../_atoms/user";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
-  const user = useRecoilValue(userState);
+  const [user] = useUserState();
+  console.log(user);
   const router = useRouter();
   const { theme } = useTheme();
   if (user) {

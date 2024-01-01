@@ -28,12 +28,19 @@ enum Language {
   go
 }
 
+enum SubmissionStatus {
+  AC
+  WA
+}
+
 model User {
-  id String @id @unique
-  email String @unique
-  phone String @unique
-  password String
-  type UserRole @default(user)
+  id          String       @id @unique
+  email       String       @unique
+  phone       String       @unique
+  password    String
+  type        UserRole     @default(user)
+  language    Language     @default(cpp)
+  createdAt DateTime @default(now())
   submissions Submission[]
 
   @@index([email])
@@ -41,24 +48,35 @@ model User {
 }
 
 model Problem {
-  id     Int       @id @default(autoincrement())
-  title String
-  description String
-  testCases Json
-  level ProblemLevel
-  submissions Submission[]
+  id              Int               @id @default(autoincrement())
+  title           String
+  description     String
+  testCases       Json
+  level           ProblemLevel
+  submissions     Submission[]
+  BoilerPlateCode BoilerPlateCode[]
+}
+
+model BoilerPlateCode {
+  problem   Problem  @relation(fields: [problemId], references: [id])
+  problemId Int
+  language  Language
+  code      String
+
+  @@id([problemId, language])
+  @@index([problemId])
 }
 
 model Submission {
-  id String @id @unique
-  user User @relation(fields: [userId], references: [id])
-  userId String
-  problem Problem @relation(fields: [problemId], references: [id])
+  id        String   @id @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  problem   Problem  @relation(fields: [problemId], references: [id])
   problemId Int
-  code String
-  lang Language
-  isCorrect Boolean
-  createdAt DateTime @default(now())
+  code      String
+  language  Language
+  status SubmissionStatus
+  submittedOn DateTime @default(now())
 
   @@index([userId])
 }

@@ -1,5 +1,5 @@
 "use client";
-import { userState } from "@/app/_atoms/user";
+import { useUserState } from "@/app/_atoms/user";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -19,9 +19,9 @@ import customAxios from "@/lib/customAxios";
 import { launchToast } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
 import { Lock } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { languages } from "../types";
 
 type PostSubmissionRes = {
   submission_id: string;
@@ -37,11 +37,12 @@ const ProblemLayout = ({
     problemId: string;
   };
 }) => {
-  const [language, setLanguage] = useState("cpp");
+  const [language, setLanguage] = useState(languages[0].value);
   const [code, setCode] = useState("// Write your code here");
   const router = useRouter();
-  const user = useRecoilValue(userState);
+  const [user] = useUserState();
   const pathName = usePathname();
+  console.log("p1");
 
   const submitSolution = async () => {
     const res = await customAxios<PostSubmissionRes>(
@@ -105,10 +106,13 @@ const ProblemLayout = ({
                 <SelectValue placeholder="Language" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="cpp">C++</SelectItem>
-                <SelectItem value="go">Go</SelectItem>
-                <SelectItem value="java">Java</SelectItem>
-                <SelectItem value="javascript">Javascript</SelectItem>
+                {languages.map((lang) => {
+                  return (
+                    <SelectItem key={lang.value} value={lang.value}>
+                      {lang.label}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
             <Textarea
@@ -128,7 +132,7 @@ const ProblemLayout = ({
               ) : (
                 <Button onClick={() => router.push("/signin")}>
                   <Lock className="mr-2 h-4 w-4 " />
-                  Login
+                  Sign in
                 </Button>
               )}
             </Card>

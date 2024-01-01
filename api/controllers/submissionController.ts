@@ -9,13 +9,29 @@ const prisma = new PrismaClient();
 
 export const getSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId;
+  const problemId = parseInt(req.body.problem_id);
+  console.log("getSubmissions", userId, problemId);
   try {
-    const submissions = await prisma.submission.findMany({
-      where: {
-        userId,
+    console.log("here");
+    const submissions = [
+      {
+        id: "1",
+        userId: "1",
+        problemId: 1,
+        code: "abc",
+        language: "cpp",
+        status: "AC",
+        submittedOn: new Date(),
       },
-    });
-    res.status(200).send(submissions);
+    ];
+    // const submissions = await prisma.submission.findMany({
+    //   where: {
+    //     userId,
+    //     problemId,
+    //   },
+    // });
+    console.log(submissions);
+    res.status(200).json(submissions);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);
@@ -34,8 +50,8 @@ export const postSubmissions = async (req: CustomRequest, res: Response) => {
         userId: userId,
         problemId: parseInt(req.params.id),
         code: parsedReq.code,
-        lang: parsedReq.lang,
-        isCorrect,
+        language: parsedReq.lang,
+        status: isCorrect ? "AC" : "WA",
       },
     });
 
