@@ -13,11 +13,15 @@ export const getProblems = async (req: CustomRequest, res: Response) => {
 };
 
 export const getProblem = async (req: CustomRequest, res: Response) => {
+  console.log("getProblem");
   const problemId = parseInt(req.params.id);
   try {
     const problem = await prisma.problem.findUnique({
       where: {
         id: problemId,
+      },
+      include: {
+        BoilerPlateCode: true,
       },
     });
     if (!problem) {

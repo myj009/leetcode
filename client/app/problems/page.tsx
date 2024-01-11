@@ -21,7 +21,6 @@ export default function Home() {
   // const loading = false;
   // const data: ProblemSchema[] = [];
   const router = useRouter();
-  console.log("p0");
 
   return (
     <main className="flex flex-col p-40 justify-center items-start pt-20">

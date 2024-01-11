@@ -37,3 +37,9 @@ export const languages = [
     label: "Java",
   },
 ];
+
+export interface BoilerPlateSchema {
+  problemId: number;
+  language: LangType;
+  code: string;
+}

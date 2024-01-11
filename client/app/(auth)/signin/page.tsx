@@ -9,9 +9,10 @@ import axios, { AxiosError } from "axios";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import useAxios from "@/lib/customAxios";
+import { languageState } from "@/app/_atoms/language";
 
 const url = "/user/signin";
 
@@ -20,7 +21,7 @@ const page: React.FC = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useUserState();
-  console.log(user);
+  const setLanguage = useSetRecoilState(languageState);
   const router = useRouter();
 
   const onSignin = async () => {
@@ -47,6 +48,7 @@ const page: React.FC = () => {
       window.localStorage.setItem("user", JSON.stringify(userData));
 
       setUser(userData);
+      setLanguage(userData.language);
       setIsLoading(false);
       router.push("/problems");
     } catch (e) {

@@ -1,15 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import useAxios from "@/hooks/useAxios";
-import { ProblemProps, ProblemSchema } from "../../types";
+import { ProblemProps, ProblemSchema, BoilerPlateSchema } from "../../types";
 import { Skeleton } from "@/components/ui/skeleton";
+import axios, { AxiosError } from "axios";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  boilerPlateAtom,
+  boilerPlateProblemId,
+} from "@/app/_atoms/boiler-plate";
+import { launchToast } from "@/lib/utils";
 
 const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
-  const { data, loading } = useAxios<ProblemSchema>(
-    `/problems/${params.problemId}`
-  );
-  console.log(params.problemId);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ProblemSchema | null>(null);
+  const setBoilerPlate = useSetRecoilState(boilerPlateAtom);
+  const bpProblemId = useRecoilValue(boilerPlateProblemId);
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get(`http://localhost:3001/problems/${params.problemId}`)
+      .then((res) => {
+        console.log(res);
+        if (res.status !== 200 && res.status !== 201) {
+          throw Error(res.data as string);
+        }
+        const data = res.data as ProblemSchema;
+        setData(data);
+        if (bpProblemId !== Number(params.problemId)) {
+          setBoilerPlate(res.data.BoilerPlateCode);
+        }
+      })
+      .catch((err) => {
+        const e = err as AxiosError;
+        console.log(e);
+        launchToast(e.response?.data as string), "", "destructive";
+      })
+      .finally(() => setLoading(false));
+  }, []);
   // const [desc, setDesc] = useState("")
   // const descRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,7 +79,9 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
                   : "text-green-500"
               }`}
             >
-              {data?.level?.charAt(0)?.toUpperCase() + data!.level?.slice(1)}
+              {data
+                ? data.level?.charAt(0)?.toUpperCase() + data.level?.slice(1)
+                : ""}
             </p>
           </div>
           <div>{data?.description}</div>

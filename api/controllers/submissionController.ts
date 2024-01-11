@@ -13,23 +13,12 @@ export const getSubmissions = async (req: CustomRequest, res: Response) => {
   console.log("getSubmissions", userId, problemId);
   try {
     console.log("here");
-    const submissions = [
-      {
-        id: "1",
-        userId: "1",
-        problemId: 1,
-        code: "abc",
-        language: "cpp",
-        status: "AC",
-        submittedOn: new Date(),
+    const submissions = await prisma.submission.findMany({
+      where: {
+        userId,
+        problemId,
       },
-    ];
-    // const submissions = await prisma.submission.findMany({
-    //   where: {
-    //     userId,
-    //     problemId,
-    //   },
-    // });
+    });
     console.log(submissions);
     res.status(200).json(submissions);
   } catch (e) {

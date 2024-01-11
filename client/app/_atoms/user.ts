@@ -15,12 +15,14 @@ export const userState = atom<{
 });
 
 export function useUserState() {
-  const [isInitial, setIsInitial] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useRecoilState(userState);
 
   useEffect(() => {
-    setIsInitial(false);
+    setMounted(true);
   }, []);
 
-  return [isInitial ? null : user, setUser] as const;
+  if (!mounted) return [null, setUser] as const;
+
+  return [user, setUser] as const;
 }

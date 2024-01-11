@@ -1,6 +1,6 @@
 "use client";
 import { TabsContent } from "@/components/ui/tabs";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProblemProps, languages } from "../../types";
 import { useAxiosArray } from "@/hooks/useAxios";
@@ -15,25 +15,42 @@ import {
 import { useUserState } from "@/app/_atoms/user";
 import { SubmissionSchema } from "./types";
 import { format } from "date-fns";
+import axios, { AxiosError } from "axios";
+import { launchToast } from "@/lib/utils";
 
 const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
   const [user] = useUserState();
-  console.log(user);
-  console.log(params.problemId);
-  // const loading = false;
-  // const data: SubmissionSchema[] = [];
-  const { data, loading, err } = useAxiosArray<SubmissionSchema>(
-    `/submissions`,
-    "post",
-    { problem_id: params.problemId },
-    {
-      Authorization: user?.token,
-    }
-  );
-  if (err) {
-    console.log(err);
-    return null;
-  }
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<SubmissionSchema[]>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    setLoading(true);
+    axios
+      .post(
+        "http://localhost:3001/submissions",
+        { problem_id: params.problemId },
+        {
+          headers: {
+            Authorization: user?.token,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw Error(res.data as string);
+        }
+        console.log(res);
+        setData(res.data);
+      })
+      .catch((err) => {
+        const e = err as AxiosError;
+        console.log(e);
+        launchToast(e.response?.data as string), "", "destructive";
+      })
+      .finally(() => setLoading(false));
+  }, [user]);
+
   return (
     <TabsContent className="p-3" value="submissions">
       {loading || data.length === 0 ? (

@@ -21,7 +21,10 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Lock } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { languages } from "../types";
+import { LangType, languages } from "../types";
+import CodeEditor from "@/components/code-editor";
+import { useRecoilState } from "recoil";
+import { languageState } from "@/app/_atoms/language";
 
 type PostSubmissionRes = {
   submission_id: string;
@@ -37,12 +40,11 @@ const ProblemLayout = ({
     problemId: string;
   };
 }) => {
-  const [language, setLanguage] = useState(languages[0].value);
+  const [language, setLanguage] = useRecoilState(languageState);
   const [code, setCode] = useState("// Write your code here");
   const router = useRouter();
   const [user] = useUserState();
   const pathName = usePathname();
-  console.log("p1");
 
   const submitSolution = async () => {
     const res = await customAxios<PostSubmissionRes>(
@@ -99,7 +101,7 @@ const ProblemLayout = ({
         <ResizablePanel className="min-w-[400px]">
           <div className="p-2 flex flex-col h-full gap-2">
             <Select
-              onValueChange={(newLang) => setLanguage(newLang)}
+              onValueChange={(newLang: LangType) => setLanguage(newLang)}
               defaultValue={language}
             >
               <SelectTrigger className="w-[180px]">
@@ -115,14 +117,7 @@ const ProblemLayout = ({
                 })}
               </SelectContent>
             </Select>
-            <Textarea
-              placeholder="Write your code here"
-              className="flex-grow bg-secondary"
-              onChange={(e) => {
-                setCode(e.target.value);
-              }}
-              value={code}
-            />
+            <CodeEditor />
 
             <Card className="p-2 flex justify-end items-center">
               {user ? (
