@@ -53,7 +53,7 @@ const ProblemLayout = ({
       "post",
       {
         lang: language,
-        code,
+        code: code.value,
       },
       {
         Authorization: user?.token,
@@ -103,7 +103,7 @@ const ProblemLayout = ({
           <div className="p-2 flex flex-col h-full gap-2">
             <Select
               onValueChange={(newLang: LangType) => setLanguage(newLang)}
-              defaultValue={language}
+              value={language}
               disabled={!code.enabled}
             >
               <SelectTrigger className="w-[180px]">

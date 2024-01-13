@@ -66,6 +66,7 @@ const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
     const params = new URLSearchParams({ submissionId: id });
     const submission = data.find((sub) => sub.id === id);
     setCode({ value: submission!.code, enabled: false });
+    console.log(submission!.language);
     setLang(submission!.language);
     router.push(pathName + "?" + params.toString());
   };
