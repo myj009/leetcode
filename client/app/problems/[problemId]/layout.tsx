@@ -25,6 +25,7 @@ import { LangType, languages } from "../types";
 import CodeEditor from "@/components/code-editor";
 import { useRecoilState } from "recoil";
 import { languageState } from "@/app/_atoms/language";
+import { codeState } from "@/app/_atoms/code";
 
 type PostSubmissionRes = {
   submission_id: string;
@@ -41,7 +42,7 @@ const ProblemLayout = ({
   };
 }) => {
   const [language, setLanguage] = useRecoilState(languageState);
-  const [code, setCode] = useState("// Write your code here");
+  const [code, setCode] = useRecoilState(codeState);
   const router = useRouter();
   const [user] = useUserState();
   const pathName = usePathname();

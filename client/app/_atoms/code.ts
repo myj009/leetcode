@@ -1,11 +1,11 @@
 import { atom } from "recoil";
 
-interface CodeAtom {
+interface CodeState {
   value: string;
   enabled: boolean;
 }
 
-export const codeAtom = atom<CodeAtom>({
+export const codeState = atom<CodeState>({
   key: "codeAtom",
   default: {
     value: "",

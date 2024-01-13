@@ -27,7 +27,12 @@ export const getProblem = async (req: CustomRequest, res: Response) => {
     if (!problem) {
       return res.status(400).send("Problem not found");
     }
-    res.status(200).json(problem);
+    const modifiedProblem = {
+      ...problem,
+      boilerPlate: problem?.BoilerPlateCode,
+    };
+
+    res.status(200).json(modifiedProblem);
   } catch (e) {
     console.log(e);
     res.status(500).send(e);

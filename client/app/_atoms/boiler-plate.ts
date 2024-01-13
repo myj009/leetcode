@@ -7,12 +7,12 @@ interface BoilerPlateAtom {
   problemId: number;
 }
 
-export const boilerPlateAtom = atom<BoilerPlateAtom[]>({
+const boilerPlateAtom = atom<BoilerPlateAtom[]>({
   key: "boilerPlateAtom",
   default: [],
 });
 
-export const boilerPlateProblemId = selector<Number>({
+const boilerPlateProblemId = selector<Number>({
   key: "boilerPlateProblemId",
   get: ({ get }) => {
     const boilerPlate = get(boilerPlateAtom);
@@ -21,7 +21,7 @@ export const boilerPlateProblemId = selector<Number>({
   },
 });
 
-export const boilerPlateforLanguage = selectorFamily<
+const boilerPlateforLanguage = selectorFamily<
   BoilerPlateAtom | undefined,
   LangType
 >({

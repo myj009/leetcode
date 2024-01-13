@@ -2,23 +2,24 @@
 import React, { useEffect, useState } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import useAxios from "@/hooks/useAxios";
-import { ProblemProps, ProblemSchema, BoilerPlateSchema } from "../../types";
+import { ProblemProps } from "../../types";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios, { AxiosError } from "axios";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  boilerPlateAtom,
-  boilerPlateProblemId,
-} from "@/app/_atoms/boiler-plate";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { launchToast } from "@/lib/utils";
+import { ProblemSchema, problemState } from "@/app/_atoms/problem";
 
 const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<ProblemSchema | null>(null);
-  const setBoilerPlate = useSetRecoilState(boilerPlateAtom);
-  const bpProblemId = useRecoilValue(boilerPlateProblemId);
+  const [data, setData] = useRecoilState(problemState);
+  // const setBoilerPlate = useSetRecoilState(boilerPlateAtom);
+  // const bpProblemId = useRecoilValue(boilerPlateProblemId);
 
   useEffect(() => {
+    if (Number(params.problemId) === data?.id) {
+      return;
+    }
+
     setLoading(true);
     axios
       .get(`http://localhost:3001/problems/${params.problemId}`)
@@ -29,9 +30,7 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
         }
         const data = res.data as ProblemSchema;
         setData(data);
-        if (bpProblemId !== Number(params.problemId)) {
-          setBoilerPlate(res.data.BoilerPlateCode);
-        }
+        console.log(data);
       })
       .catch((err) => {
         const e = err as AxiosError;

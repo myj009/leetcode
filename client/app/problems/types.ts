@@ -1,4 +1,4 @@
-export interface ProblemSchema {
+interface ProblemSchema {
   id: number;
   title: string;
   description: string;
@@ -17,16 +17,12 @@ export type ProblemProps = {
   };
 };
 
-export type LangType = "go" | "cpp" | "java" | "javascript";
+export type LangType = "cpp" | "java" | "javascript" | "python";
 
 export const languages = [
   {
     value: "cpp",
     label: "C++",
-  },
-  {
-    value: "go",
-    label: "Go",
   },
   {
     value: "javascript",
