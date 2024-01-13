@@ -104,6 +104,7 @@ const ProblemLayout = ({
             <Select
               onValueChange={(newLang: LangType) => setLanguage(newLang)}
               defaultValue={language}
+              disabled={!code.enabled}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Language" />
@@ -122,7 +123,11 @@ const ProblemLayout = ({
 
             <Card className="p-2 flex justify-end items-center">
               {user ? (
-                <Button onClick={submitSolution} className="bg-[#4CC575]">
+                <Button
+                  disabled={!code.enabled}
+                  onClick={submitSolution}
+                  className="bg-[#4CC575]"
+                >
                   Submit
                 </Button>
               ) : (

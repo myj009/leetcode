@@ -1,6 +1,6 @@
 "use client";
 import { TabsContent } from "@/components/ui/tabs";
-import React, { useEffect, useState } from "react";
+import React, { ReactEventHandler, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProblemProps, languages } from "../../types";
 import { useAxiosArray } from "@/hooks/useAxios";
@@ -17,11 +17,22 @@ import { SubmissionSchema } from "./types";
 import { format } from "date-fns";
 import axios, { AxiosError } from "axios";
 import { launchToast } from "@/lib/utils";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import path from "path";
+import { useSetRecoilState } from "recoil";
+import { codeState } from "@/app/_atoms/code";
+import { languageState } from "@/app/_atoms/language";
 
 const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
   const [user] = useUserState();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<SubmissionSchema[]>([]);
+  const setCode = useSetRecoilState(codeState);
+  const setLang = useSetRecoilState(languageState);
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+  const router = useRouter();
+  const submissionId = searchParams.get("submissionId");
 
   useEffect(() => {
     if (!user) return;
@@ -51,6 +62,14 @@ const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
       .finally(() => setLoading(false));
   }, [user]);
 
+  const onRowSelect = (id: string) => {
+    const params = new URLSearchParams({ submissionId: id });
+    const submission = data.find((sub) => sub.id === id);
+    setCode({ value: submission!.code, enabled: false });
+    setLang(submission!.language);
+    router.push(pathName + "?" + params.toString());
+  };
+
   return (
     <TabsContent className="p-3" value="submissions">
       {loading || data.length === 0 ? (
@@ -73,7 +92,13 @@ const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
           <TableBody>
             {data.map((submission) => {
               return (
-                <TableRow key={submission.id}>
+                <TableRow
+                  key={submission.id}
+                  onClick={() => onRowSelect(submission.id)}
+                  className={
+                    submissionId === submission.id ? `bg-muted/50` : ``
+                  }
+                >
                   <TableCell
                     className={`font-medium ${
                       submission.status == "AC"

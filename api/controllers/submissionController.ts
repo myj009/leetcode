@@ -27,6 +27,23 @@ export const getSubmissions = async (req: CustomRequest, res: Response) => {
   }
 };
 
+export const getSubmission = async (req: CustomRequest, res: Response) => {
+  const userId = req.userId;
+  const submissionId = req.query["submissionId"] as string;
+
+  try {
+    const submission = await prisma.submission.findUnique({
+      where: {
+        id: submissionId,
+      },
+    });
+    res.status(200).json(submission);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
+};
+
 export const postSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId!;
   try {

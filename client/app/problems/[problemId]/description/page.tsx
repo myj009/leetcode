@@ -8,14 +8,17 @@ import axios, { AxiosError } from "axios";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { launchToast } from "@/lib/utils";
 import { ProblemSchema, problemState } from "@/app/_atoms/problem";
+import { codeState } from "@/app/_atoms/code";
 
 const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useRecoilState(problemState);
+  const [code, setCode] = useRecoilState(codeState);
   // const setBoilerPlate = useSetRecoilState(boilerPlateAtom);
   // const bpProblemId = useRecoilValue(boilerPlateProblemId);
 
   useEffect(() => {
+    setCode({ ...code, enabled: true });
     if (Number(params.problemId) === data?.id) {
       return;
     }

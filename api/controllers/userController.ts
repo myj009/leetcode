@@ -58,7 +58,12 @@ export const userSignin = async (req: CustomRequest, res: Response) => {
     }
 
     jwt.sign(
-      { email: parsedReq.email, userId: user.id, userType: user.type },
+      {
+        email: parsedReq.email,
+        userId: user.id,
+        userType: user.type,
+        language: user.language,
+      },
       secret,
       (error: Error | null, token: string | undefined) => {
         if (error) {

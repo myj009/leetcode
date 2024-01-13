@@ -48,6 +48,7 @@ const page: React.FC = () => {
       window.localStorage.setItem("user", JSON.stringify(userData));
 
       setUser(userData);
+      console.log(userData.language);
       setLanguage(userData.language);
       setIsLoading(false);
       router.push("/problems");

@@ -36,9 +36,6 @@ const CodeEditor = () => {
   };
 
   useEffect(() => {
-    // if (code?.value !== "") {
-    //   return;
-    // }
     setCode({ ...code, value: boilerPlate?.code || "" });
   }, [boilerPlate]);
 
