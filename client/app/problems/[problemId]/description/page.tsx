@@ -27,13 +27,11 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
     axios
       .get(`http://localhost:3001/problems/${params.problemId}`)
       .then((res) => {
-        console.log(res);
         if (res.status !== 200 && res.status !== 201) {
           throw Error(res.data as string);
         }
         const data = res.data as ProblemSchema;
         setData(data);
-        console.log(data);
       })
       .catch((err) => {
         const e = err as AxiosError;

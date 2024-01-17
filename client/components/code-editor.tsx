@@ -17,7 +17,6 @@ const CodeEditor = () => {
   const [code, setCode] = useRecoilState(codeState);
   const language = useRecoilValue(languageState);
   const boilerPlate = useRecoilValue(boilerPlateforLanguage(language));
-  console.log(boilerPlate);
 
   // Function to get the appropriate language extension
   const getLanguageExtension = (language: LangType) => {
