@@ -1,10 +1,8 @@
 import { CustomRequest, User } from "../types/user";
 import { Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { problemSchema } from "../types/problem";
 import { ZodError } from "zod";
-
-const prisma = new PrismaClient();
+import { prisma } from "..";
 
 export const getProblems = async (req: CustomRequest, res: Response) => {
   const problems = await prisma.problem.findMany();

@@ -2,11 +2,9 @@ import { CustomRequest, User, userMinSchema, userSchema } from "../types/user";
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 import { secret } from "../middleware/auth";
-import { PrismaClient } from "@prisma/client";
 import cuid from "cuid";
 import { ZodError } from "zod";
-
-const prisma = new PrismaClient();
+import { prisma } from "..";
 
 export const adminSingup = async (req: CustomRequest, res: Response) => {
   try {

@@ -1,11 +1,10 @@
 import { CustomRequest, User } from "../types/user";
 import { Response } from "express";
 import cuid from "cuid";
-import { PrismaClient } from "@prisma/client";
 import { submissionSchema } from "../types/submission";
 import { ZodError } from "zod";
-
-const prisma = new PrismaClient();
+import { sendToQueue } from "./rabbitmq";
+import { prisma } from "..";
 
 export const getSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId;
@@ -47,21 +46,13 @@ export const getSubmission = async (req: CustomRequest, res: Response) => {
 export const postSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId!;
   try {
-    const parsedReq = await submissionSchema.parseAsync(req.body);
-    const isCorrect = Math.random() > 0.5;
-
-    const sub = await prisma.submission.create({
-      data: {
-        id: cuid(),
-        userId: userId,
-        problemId: parseInt(req.params.id),
-        code: parsedReq.code,
-        language: parsedReq.lang,
-        status: isCorrect ? "AC" : "WA",
-      },
-    });
-
-    res.status(201).json({ submission_id: sub.id, accepted: isCorrect });
+    // Send to queue
+    const msg = {
+      problemId: parseInt(req.params.id),
+      req,
+      res,
+    };
+    await sendToQueue(req, res);
   } catch (e) {
     console.log(e);
     if (e instanceof ZodError) {
