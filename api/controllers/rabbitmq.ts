@@ -6,13 +6,16 @@ import { submissionSchema } from "../types/submission";
 import { prisma } from "..";
 import Docker from "dockerode";
 import fs from "fs";
+import * as path from "path";
 
 const submissionQueue = "submissions";
 const responseQueue = "responses";
 
 // Connect to rabbit mq
 async function connectRabbitMQ() {
-  const connection = await amqp.connect("amqp://localhost:5672");
+  const connection = await amqp.connect(
+    "amqp://username:password@localhost:5672"
+  );
   const channel = await connection.createChannel();
   return { connection, channel };
 }
@@ -24,6 +27,11 @@ type msgContent = {
   code: string;
   lang: Language;
 };
+
+interface ExecutionResult {
+  result: string;
+  success: boolean;
+}
 
 export const sendToQueue = async (req: CustomRequest, res: Response) => {
   const parsedReq = await submissionSchema.parseAsync(req.body);
@@ -45,7 +53,8 @@ export const sendToQueue = async (req: CustomRequest, res: Response) => {
       responseQueueName,
       async (msg) => {
         if (msg) {
-          const result = JSON.parse(msg.content.toString());
+          const result: ExecutionResult = JSON.parse(msg.content.toString());
+          console.log("Returned - ", result);
 
           const sub = await prisma.submission.create({
             data: {
@@ -54,13 +63,13 @@ export const sendToQueue = async (req: CustomRequest, res: Response) => {
               problemId: parseInt(req.params.id),
               code: parsedReq.code,
               language: parsedReq.lang,
-              status: result.isCorrect ? "AC" : "WA",
+              status: result.success ? "AC" : "WA",
             },
           });
 
           res
             .status(201)
-            .json({ submission_id: sub.id, accepted: result.isCorrect });
+            .json({ submission_id: sub.id, accepted: result.success });
           console.log("Received from queue", result);
           await channel.close();
           await connection.close();
@@ -70,11 +79,12 @@ export const sendToQueue = async (req: CustomRequest, res: Response) => {
     );
 
     await channel.assertQueue(submissionQueue);
+    console.log(correlationId, responseQueueName);
     channel.sendToQueue(submissionQueue, Buffer.from(JSON.stringify(msg)), {
       correlationId,
       replyTo: responseQueueName,
     });
-    console.log("Sent to queue", msg);
+    console.log("Sent to queue");
   } catch (e) {
     console.log(e);
   }
@@ -85,11 +95,14 @@ export const receiveFromQueue = async () => {
     const { connection, channel } = await connectRabbitMQ();
     channel.prefetch(1);
     await channel.assertQueue(submissionQueue);
-    channel.consume(submissionQueue, (msg) => {
+    channel.consume(submissionQueue, async (msg) => {
       if (msg) {
+        console.log("Received from queue");
         const content = JSON.parse(msg.content.toString()) as msgContent;
         try {
-          const result = ExecuteSolution(content);
+          const result = await ExecuteSolution(content);
+          console.log(result);
+          console.log(msg.properties);
           channel.sendToQueue(
             msg.properties.replyTo,
             Buffer.from(JSON.stringify(result)),
@@ -97,13 +110,11 @@ export const receiveFromQueue = async () => {
               correlationId: msg.properties.correlationId,
             }
           );
-
-          channel.ack(msg);
         } catch (e) {
           console.log(e);
+        } finally {
+          channel.ack(msg);
         }
-        console.log("Received from queue", content);
-        channel.ack(msg);
       }
     });
   } catch (e) {
@@ -123,9 +134,19 @@ async function createDockerContainer(content: msgContent) {
     // },
   };
   // same as docker create --image imageName --tty --command cmdToRun
-  const container = await docker.createContainer(containerConfig);
-  // Start the container
-  await container.start();
+  console.log("creating container");
+  let container: Docker.Container = {} as Docker.Container;
+  try {
+    container = await docker.createContainer(containerConfig);
+    console.log("created container");
+    // Start the container
+    await container.start();
+    console.log("started container");
+  } catch (e) {
+    console.log(e);
+  }
+
+  return container;
   // Copy the file to the container
   // const containerId = container.id;
   // const sourcePath = "testfiles/1/test.cpp"; // Replace with your local file path
@@ -137,12 +158,10 @@ async function createDockerContainer(content: msgContent) {
   // } catch (error) {
   //   console.error("Error copying file to container:", error);
   // }
-
-  return container;
 }
 
 const ExecuteSolution = (content: msgContent) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise<ExecutionResult>(async (resolve, reject) => {
     console.log("executing code");
     const container = await createDockerContainer(content);
 
@@ -152,7 +171,7 @@ const ExecuteSolution = (content: msgContent) => {
       resolve({
         result:
           "Time Limit Exceed!! 😔 \n \n - Optimize your code \n - Avoid infinite loops",
-        sucess: false,
+        success: false,
       });
       await container.stop();
     }, 2000);
@@ -161,14 +180,16 @@ const ExecuteSolution = (content: msgContent) => {
 
     // get logs
     const logs = await container.logs({ stdout: true, stderr: true });
+    const cleanLogs = logs.toString().replace(/\x1B\[[0-9;]*[mGK]/g, "");
 
     // return output/error
     if (containerExitStatus.StatusCode === 0) {
-      resolve({ result: logs.toString(), sucess: true });
+      resolve({ result: cleanLogs, success: true });
       clearTimeout(tle);
       await container.remove();
     } else {
-      resolve({ result: logs.toString(), sucess: false });
+      resolve({ result: cleanLogs, success: false });
+      console.log("here");
       clearTimeout(tle);
       await container.remove();
     }
@@ -182,15 +203,20 @@ const GetDockerBaseImage = (lang: Language) => {
     case "java":
       return "openjdk:16";
     case "cpp":
-      return "gcc:latest";
+      return "gcc";
     default:
       return "node:14";
   }
 };
 
 const GetDockerRunCommand = (lang: Language, code: string) => {
-  const sourcePath = "testfiles/1/test.cpp";
-  const fileContent = fs.readFileSync(sourcePath, "utf-8");
+  const sourcePath = "../testfiles/1/test.cpp";
+  const fileContent = fs.readFileSync(
+    path.resolve(__dirname, sourcePath),
+    "utf-8"
+  );
+  console.log(code);
+  //console.log(fileContent);
   let cmd;
   switch (lang) {
     case "javascript":
@@ -201,11 +227,13 @@ const GetDockerRunCommand = (lang: Language, code: string) => {
       cmd = [
         "bash",
         "-c",
-        `mkdir app && cd app && echo "${sourcePath} ? tests.cpp && echo "${code}" > myapp.cpp && g++ -o myapp tests.cpp && ./myapp`,
+        `mkdir app && cd app && echo "${fileContent}" > tests.cpp && echo "${code}" > myapp.cpp && g++ -o myapp tests.cpp myapp.cpp && ./myapp`,
       ];
       break;
     default:
       cmd = ["node", code];
   }
+
+  console.log("returned cmd");
   return cmd;
 };

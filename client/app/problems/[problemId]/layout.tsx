@@ -48,6 +48,7 @@ const ProblemLayout = ({
   const pathName = usePathname();
 
   const submitSolution = async () => {
+    console.log(code.value);
     const res = await customAxios<PostSubmissionRes>(
       `/submissions/${params.problemId}`,
       "post",

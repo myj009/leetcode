@@ -42,8 +42,8 @@ const CodeEditor = () => {
     <CodeMirror
       value={code.value}
       extensions={[getLanguageExtension(language)]}
-      onChange={() => {
-        setCode({ ...code, value: boilerPlate?.code || "" });
+      onChange={(value: string) => {
+        setCode({ ...code, value });
       }}
       className="flex-grow"
       height="100%"
