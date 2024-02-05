@@ -6,6 +6,6 @@ const { persistAtom } = recoilPersist();
 
 export const languageState = atom<LangType>({
   key: "languageAtom",
-  default: "javascript",
+  default: "cpp",
   effects_UNSTABLE: [persistAtom],
 });

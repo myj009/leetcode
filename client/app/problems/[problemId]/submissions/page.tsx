@@ -73,7 +73,7 @@ const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
 
   return (
     <TabsContent className="p-3" value="submissions">
-      {loading || data.length === 0 ? (
+      {loading ? (
         <div className="flex mt-4 items-center space-x-4">
           <Skeleton className="h-12 w-12 rounded-full" />
           <div className="space-y-2">

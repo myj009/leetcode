@@ -17,21 +17,21 @@ export type ProblemProps = {
   };
 };
 
-export type LangType = "cpp" | "java" | "javascript" | "python";
+export type LangType = "cpp"; // | "java" | "javascript" | "python";
 
 export const languages = [
   {
     value: "cpp",
     label: "C++",
   },
-  {
-    value: "javascript",
-    label: "Javascript",
-  },
-  {
-    value: "java",
-    label: "Java",
-  },
+  // {
+  //   value: "javascript",
+  //   label: "Javascript",
+  // },
+  // {
+  //   value: "java",
+  //   label: "Java",
+  // },
 ];
 
 export interface BoilerPlateSchema {

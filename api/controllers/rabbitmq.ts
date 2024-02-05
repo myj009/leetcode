@@ -129,7 +129,7 @@ async function createDockerContainer(content: msgContent) {
   const docker = new Docker();
   const containerConfig = {
     Image: GetDockerBaseImage(content.lang),
-    Cmd: GetDockerRunCommand(content.lang, content.code), // ["node", "-e", code]
+    Cmd: GetDockerRunCommand(content), // ["node", "-e", code]
     Tty: true,
     // HostConfig: {
     //   StopTimeout: 2, // Stop the container after 2 seconds
@@ -214,12 +214,14 @@ const GetDockerBaseImage = (lang: Language) => {
   }
 };
 
-const GetDockerRunCommand = (lang: Language, code: string) => {
-  const sourcePath = "../testfiles/1/test.cpp";
+const GetDockerRunCommand = (content: msgContent) => {
+  const { lang, code, problemId } = content;
+  const sourcePath = `../testfiles/${problemId}/test.cpp`;
   const fileContent = fs.readFileSync(
     path.resolve(__dirname, sourcePath),
     "utf-8"
   );
+
   console.log(code);
   //console.log(fileContent);
   let cmd;
