@@ -67,9 +67,11 @@ export const sendToQueue = async (req: CustomRequest, res: Response) => {
             },
           });
 
-          res
-            .status(201)
-            .json({ submission_id: sub.id, accepted: result.success });
+          res.status(201).json({
+            submission_id: sub.id,
+            accepted: result.success,
+            logs: result.result,
+          });
           console.log("Received from queue", result);
           await channel.close();
           await connection.close();
@@ -180,10 +182,13 @@ const ExecuteSolution = (content: msgContent) => {
 
     // get logs
     const logs = await container.logs({ stdout: true, stderr: true });
-    const cleanLogs = logs.toString().replace(/\x1B\[[0-9;]*[mGK]/g, "");
+    console.log("raw logs", logs.toString());
+    let cleanLogs = logs.toString().replace(/\x1B\[[0-9;]*[mGK]/g, "");
+    console.log("clean logs", cleanLogs);
 
     // return output/error
     if (containerExitStatus.StatusCode === 0) {
+      cleanLogs = cleanLogs.replace(/[\r\n]/g, "");
       resolve({ result: cleanLogs, success: true });
       clearTimeout(tle);
       await container.remove();

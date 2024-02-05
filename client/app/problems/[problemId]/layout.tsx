@@ -18,19 +18,15 @@ import { Textarea } from "@/components/ui/textarea";
 import customAxios from "@/lib/customAxios";
 import { launchToast } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Lock } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LangType, languages } from "../types";
 import CodeEditor from "@/components/code-editor";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { languageState } from "@/app/_atoms/language";
 import { codeState } from "@/app/_atoms/code";
-
-type PostSubmissionRes = {
-  submission_id: string;
-  accepted: boolean;
-};
+import { submissionState } from "@/app/_atoms/submission";
 
 const ProblemLayout = ({
   children,
@@ -46,10 +42,11 @@ const ProblemLayout = ({
   const router = useRouter();
   const [user] = useUserState();
   const pathName = usePathname();
+  const setSubmission = useSetRecoilState(submissionState);
 
   const submitSolution = async () => {
     console.log(code.value);
-    const res = await customAxios<PostSubmissionRes>(
+    const res = await customAxios<submissionState>(
       `/submissions/${params.problemId}`,
       "post",
       {
@@ -60,12 +57,17 @@ const ProblemLayout = ({
         Authorization: user?.token,
       }
     );
+    setSubmission(res);
     if (res?.accepted) {
       launchToast("Submission Accepted", "", "success");
     } else {
       launchToast("Submission Rejected", "", "destructive");
     }
   };
+
+  useEffect(() => {
+    setSubmission(null);
+  }, []);
 
   return (
     <div className="p-4 flex flex-grow overflow-y-hidden">
@@ -76,7 +78,7 @@ const ProblemLayout = ({
         <ResizablePanel className="h-full min-w-[400px]">
           <Tabs
             defaultValue={pathName.split("/").pop()}
-            className="h-full w-full p-3"
+            className="h-full w-full p-3 overflow-y-auto"
           >
             <TabsList className="w-full grid grid-cols-2 lg:grid-cols-4">
               <TabsTrigger

@@ -17,6 +17,9 @@ export const getSubmissions = async (req: CustomRequest, res: Response) => {
         userId,
         problemId,
       },
+      orderBy: {
+        submittedOn: "desc",
+      },
     });
     console.log(submissions);
     res.status(200).json(submissions);
