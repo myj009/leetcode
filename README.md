@@ -15,6 +15,15 @@ Before running this project, please ensure that you have the following dependenc
 - Node.js (v14 or higher)
 - Docker
 
+## Technologies used
+
+- Nextjs
+- Shadcn
+- RabbitMQ
+- PrismaORM
+- Postgres
+- Docker
+
 ## Getting Started
 
 Follow the steps below to start the project locally:
@@ -26,7 +35,9 @@ Follow the steps below to start the project locally:
 npm run start-containers
 ```
 
-2. Start the backend server
+2. Go to the /api folder. Copy the .env.example file to .env and fill in the required environment variables
+
+3. Start the backend server
    Go to the /api directory and run
 
 ```
@@ -34,7 +45,7 @@ npm install
 npm run dev
 ```
 
-3. Start the frontend server
+4. Start the frontend server
    Go to the /client directory and run
 
 ```
