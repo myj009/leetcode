@@ -54,7 +54,7 @@ model Problem {
   testCases       Json
   level           ProblemLevel
   submissions     Submission[]
-  BoilerPlateCode BoilerPlateCode[]
+  boilerPlate     BoilerPlateCode[]
 }
 
 model BoilerPlateCode {

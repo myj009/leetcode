@@ -1,8 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useCallback, useEffect, useState } from "react";
 import { launchToast } from "./utils";
 
-const baseUrl = "http://localhost:3001";
+export const axiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
+
+const baseUrl = process.env.NEXT_PUBLIC_API_URL as string;
 
 const customAxios = async <T>(
   url: string,
@@ -10,18 +13,17 @@ const customAxios = async <T>(
   requestData?: AxiosRequestConfig["data"],
   headers?: AxiosRequestConfig["headers"]
 ) => {
-  const fullUrl = baseUrl + url;
   try {
     const response: AxiosResponse<T | string> =
       method === "get"
-        ? await axios.get(fullUrl, { headers })
+        ? await axiosInstance.get(url, { headers })
         : method === "post"
-        ? await axios.post(fullUrl, requestData, { headers })
+        ? await axiosInstance.post(url, requestData, { headers })
         : method === "put"
-        ? await axios.put(fullUrl, requestData, { headers })
+        ? await axiosInstance.put(url, requestData, { headers })
         : method === "delete"
-        ? await axios.delete(fullUrl, { headers })
-        : await axios.get(fullUrl, { headers }); // Default to GET if the method is invalid
+        ? await axiosInstance.delete(url, { headers })
+        : await axiosInstance.get(url, { headers }); // Default to GET if the method is invalid
 
     if (response.status !== 200 && response.status !== 201) {
       throw Error(response.data as string);

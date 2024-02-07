@@ -15,13 +15,14 @@ import {
 import { useUserState } from "@/app/_atoms/user";
 import { SubmissionSchema } from "./types";
 import { format } from "date-fns";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { launchToast } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import path from "path";
 import { useSetRecoilState } from "recoil";
 import { codeState } from "@/app/_atoms/code";
 import { languageState } from "@/app/_atoms/language";
+import { axiosInstance } from "@/lib/customAxios";
 
 const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
   const [user] = useUserState();
@@ -37,9 +38,9 @@ const ProblemSubmissions: React.FC<ProblemProps> = ({ params }) => {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    axios
+    axiosInstance
       .post(
-        "http://localhost:3001/submissions",
+        `/submissions`,
         { problem_id: params.problemId },
         {
           headers: {

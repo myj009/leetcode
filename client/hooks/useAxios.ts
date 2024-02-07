@@ -1,8 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { launchToast } from "@/lib/utils";
-
-const baseUrl = "http://localhost:3001";
+import { axiosInstance } from "@/lib/customAxios";
 
 const useAxios = <T>(
   url: string,
@@ -15,19 +14,18 @@ const useAxios = <T>(
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    const fullUrl = baseUrl + url;
     try {
       console.log("axios call");
       const response: AxiosResponse<T | string> =
         method === "get"
-          ? await axios.get(fullUrl, { headers })
+          ? await axiosInstance.get(url, { headers })
           : method === "post"
-          ? await axios.post(fullUrl, requestData, { headers })
+          ? await axiosInstance.post(url, requestData, { headers })
           : method === "put"
-          ? await axios.put(fullUrl, requestData, { headers })
+          ? await axiosInstance.put(url, requestData, { headers })
           : method === "delete"
-          ? await axios.delete(fullUrl, { headers })
-          : await axios.get(fullUrl, { headers }); // Default to GET if the method is invalid
+          ? await axiosInstance.delete(url, { headers })
+          : await axiosInstance.get(url, { headers }); // Default to GET if the method is invalid
 
       if (response.status !== 200 && response.status !== 201) {
         throw Error(response.data as string);
@@ -63,19 +61,18 @@ export const useAxiosArray = <T>(
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    const fullUrl = baseUrl + url;
     try {
       console.log("axios call");
       const response: AxiosResponse<T[] | string> =
         method === "get"
-          ? await axios.get(fullUrl, { headers })
+          ? await axiosInstance.get(url, { headers })
           : method === "post"
-          ? await axios.post(fullUrl, requestData, { headers })
+          ? await axiosInstance.post(url, requestData, { headers })
           : method === "put"
-          ? await axios.put(fullUrl, requestData, { headers })
+          ? await axiosInstance.put(url, requestData, { headers })
           : method === "delete"
-          ? await axios.delete(fullUrl, { headers })
-          : await axios.get(fullUrl, { headers }); // Default to GET if the method is invalid
+          ? await axiosInstance.delete(url, { headers })
+          : await axiosInstance.get(url, { headers }); // Default to GET if the method is invalid
 
       if (response.status !== 200 && response.status !== 201) {
         throw Error(response.data as string);

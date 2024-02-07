@@ -4,13 +4,14 @@ import { TabsContent } from "@/components/ui/tabs";
 import useAxios from "@/hooks/useAxios";
 import { ProblemProps } from "../../types";
 import { Skeleton } from "@/components/ui/skeleton";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { launchToast } from "@/lib/utils";
 import { ProblemSchema, problemState } from "@/app/_atoms/problem";
 import { codeState } from "@/app/_atoms/code";
 import { Card } from "@/components/ui/card";
 import { submissionState } from "@/app/_atoms/submission";
+import { axiosInstance } from "@/lib/customAxios";
 
 const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
   const [loading, setLoading] = useState(true);
@@ -27,8 +28,8 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
     }
 
     setLoading(true);
-    axios
-      .get(`http://localhost:3001/problems/${params.problemId}`)
+    axiosInstance
+      .get(`/problems/${params.problemId}`)
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw Error(res.data as string);
