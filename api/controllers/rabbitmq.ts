@@ -14,7 +14,7 @@ const responseQueue = "responses";
 // Connect to rabbit mq
 async function connectRabbitMQ() {
   const connection = await amqp.connect(
-    "amqp://username:password@localhost:5672"
+    process.env.RABBITMQ_URL! // || "amqp://username:password@localhost:5672"
   );
   const channel = await connection.createChannel();
   return { connection, channel };
