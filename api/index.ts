@@ -5,11 +5,12 @@ import submissionRoute from "./routes/submissionRoute";
 import cors from "cors";
 import { receiveFromQueue } from "./controllers/rabbitmq";
 import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
 
 const express = require("express");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 export const prisma = new PrismaClient();
 
@@ -19,6 +20,9 @@ app.use("/admin", adminRoute);
 app.use("/user", userRoute);
 app.use("/problems", problemRoute);
 app.use("/submissions", submissionRoute);
+app.get("/test", (req: Request, res: Response) => {
+  res.send("Healthy");
+});
 
 receiveFromQueue();
 
