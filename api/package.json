@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon index.ts",
-    "start": "ts-node index.ts",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-containers": "docker compose up -d",
     "stop-containers": "docker compose down"
