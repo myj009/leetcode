@@ -1,4 +1,4 @@
-interface ProblemSchema {
+export interface ProblemSchema {
   id: number;
   title: string;
   description: string;

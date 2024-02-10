@@ -21,16 +21,16 @@ const CodeEditor = () => {
   // Function to get the appropriate language extension
   const getLanguageExtension = (language: LangType) => {
     switch (language) {
-      case "javascript":
-        return javascript();
-      case "python":
-        return python();
-      case "java":
-        return java();
+      // case "javascript":
+      //   return javascript();
+      // case "python":
+      //   return python();
+      // case "java":
+      //   return java();
       case "cpp":
         return cpp();
       default:
-        return [];
+        return cpp();
     }
   };
 
