@@ -23,7 +23,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <main className="flex flex-col p-40 justify-center items-start pt-20">
+    <main className="flex flex-col p-4 sm:p-20 lg:p-40 justify-center items-start pt-20 lg:pt-20">
       {loading && data ? (
         <Loader2 className="mr-2 h-20 w-20 animate-spin" />
       ) : (

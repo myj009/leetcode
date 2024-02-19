@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "next-themes";
 
 const Header: React.FC = () => {
-  const [user, setUser] = useUserState()
+  const [user, setUser] = useUserState();
   const router = useRouter();
   const path = usePathname();
   const { theme } = useTheme();
@@ -26,8 +26,8 @@ const Header: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center w-full px-20 md:px-40 py-3">
-        <div className="flex gap-6 items-center">
+      <div className="flex justify-between items-center w-full px-5 sm:px-20 md:px-30 lg:px-40 py-3">
+        <div className="flex gap-2 sm:gap-6 items-center">
           <Image
             src={theme === "dark" ? logo : lightLogo}
             alt="logo"
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
           />
           <div>
             <Button
-              className={`font-semibold text-md ${
+              className={`font-semibold text-sm sm:text-md ${
                 path === "/problems" && "underline"
               }`}
               variant="link"
@@ -46,7 +46,7 @@ const Header: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="flex gap-6 items-center">
+        <div className="flex text-sm sm:text-md gap-2 sm:gap-6 items-center">
           {!user ? (
             <div className="">
               <Link className="text-[#FFA123]" href="/signup">
@@ -68,7 +68,7 @@ const Header: React.FC = () => {
           )}
           <ThemeToggle />
           {user && (
-            <Avatar>
+            <Avatar className="hidden sm:block">
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>

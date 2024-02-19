@@ -73,9 +73,9 @@ const ProblemLayout = ({
     <div className="p-4 flex flex-grow overflow-y-hidden">
       <ResizablePanelGroup
         direction="horizontal"
-        className="h-full border rounded-lg min-w-[720px]"
+        className="h-full border rounded-lg md:min-w-[720px]"
       >
-        <ResizablePanel className="h-full min-w-[400px]">
+        <ResizablePanel className="h-full md:min-w-[370px]">
           <Tabs
             defaultValue={pathName.split("/").pop()}
             className="h-full w-full p-3 overflow-y-auto"
@@ -102,7 +102,7 @@ const ProblemLayout = ({
           </Tabs>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel className="min-w-[400px]">
+        <ResizablePanel className="hidden md:block min-w-[370px]">
           <div className="p-2 flex flex-col h-full gap-2">
             <Select
               onValueChange={(newLang: LangType) => setLanguage(newLang)}
