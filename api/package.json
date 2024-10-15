@@ -11,6 +11,9 @@
     "start-containers": "docker compose up -d",
     "stop-containers": "docker compose down"
   },
+  "prisma": {
+    "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -31,6 +34,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.11.5",
     "@types/uuid": "^9.0.7",
+    "nodemon": "^3.1.7",
     "prisma": "^5.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

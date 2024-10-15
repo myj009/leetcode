@@ -2,7 +2,7 @@
 #include <vector>
 using namespace std;
 
-std::vector<int> sortArray(std::vector<int>& arr);
+std::vector<int> sortArray(std::vector<int>& nums);
 
 int main() {
     // Test case 1: Empty array

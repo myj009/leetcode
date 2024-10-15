@@ -34,7 +34,10 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
         if (res.status !== 200 && res.status !== 201) {
           throw Error(res.data as string);
         }
+
         const data = res.data as ProblemSchema;
+        data.testCases = JSON.parse(res.data.testCases);
+        console.log(data);
         setData(data);
       })
       .catch((err) => {

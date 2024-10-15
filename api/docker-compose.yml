@@ -9,5 +9,18 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=username
       - RABBITMQ_DEFAULT_PASS=password
+
+  postgres:
+    image: postgres:latest
+    container_name: leetcode_postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: leetcode
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 volumes:
   rabbitmq-data:
+  postgres_data:

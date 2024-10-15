@@ -2,13 +2,13 @@
 #include <vector>
 using namespace std;
 
-int maxNumber(std::vector<int>& arr);
+int maxElement(std::vector<int>& nums);
 
 int main() {
   // Test case 1: Single digit array
   std::vector<int> arr1 = {5};
   int ans1 = 5;
-  int max1 = maxNumber(arr1);
+  int max1 = maxElement(arr1);
   if(max1 != ans1){
     cerr<<"\"Test case 1 failed\""<<endl;
     cerr<<"\" - [\"";
@@ -25,7 +25,7 @@ int main() {
   // Test case 2: Multiple digit array
   std::vector<int> arr2 = {3, 1, 4, 2};
   int ans2 = 4;
-  int max2 = maxNumber(arr2);
+  int max2 = maxElement(arr2);
   if(max2 != ans2){
     cerr<<"\"Test case 2 failed\""<<endl;
     cerr<<"\" - [\"";
@@ -42,7 +42,7 @@ int main() {
   // Test case 3: Array with negative numbers
   std::vector<int> arr3 = {-3, -1, -4, -2};
   int ans3 = -1;
-  int max3 = maxNumber(arr3);
+  int max3 = maxElement(arr3);
   if(max3 != ans3){
     cerr<<"\"Test case 3 failed\""<<endl;
     cerr<<"\" - [\"";
