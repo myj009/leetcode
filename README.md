@@ -24,6 +24,11 @@ Before running this project, please ensure that you have the following dependenc
 - Postgres
 - Docker
 
+## Test Credentials
+
+email - `mj@test.com`
+password - `password`
+
 ## Getting Started
 
 Follow the steps below to start the project locally:
