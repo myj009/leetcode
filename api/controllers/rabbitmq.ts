@@ -222,7 +222,7 @@ const GetDockerRunCommand = (content: msgContent) => {
     "utf-8"
   );
 
-  console.log(code);
+  // console.log(code);
   //console.log(fileContent);
   let cmd;
   switch (lang) {

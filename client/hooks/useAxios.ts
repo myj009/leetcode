@@ -15,7 +15,6 @@ const useAxios = <T>(
 
   const fetchData = async () => {
     try {
-      console.log("axios call");
       const response: AxiosResponse<T | string> =
         method === "get"
           ? await axiosInstance.get(url, { headers })
@@ -62,7 +61,6 @@ export const useAxiosArray = <T>(
 
   const fetchData = async () => {
     try {
-      console.log("axios call");
       const response: AxiosResponse<T[] | string> =
         method === "get"
           ? await axiosInstance.get(url, { headers })

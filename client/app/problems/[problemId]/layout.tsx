@@ -45,7 +45,6 @@ const ProblemLayout = ({
   const setSubmission = useSetRecoilState(submissionState);
 
   const submitSolution = async () => {
-    console.log(code.value);
     const res = await customAxios<submissionState>(
       `/submissions/${params.problemId}`,
       "post",

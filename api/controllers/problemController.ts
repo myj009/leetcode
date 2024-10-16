@@ -6,12 +6,12 @@ import { prisma } from "..";
 
 export const getProblems = async (req: CustomRequest, res: Response) => {
   const problems = await prisma.problem.findMany();
-  console.log("getProblems");
+  // console.log("getProblems");
   res.status(200).json(problems);
 };
 
 export const getProblem = async (req: CustomRequest, res: Response) => {
-  console.log("getProblem");
+  // console.log("getProblem");
   const problemId = parseInt(req.params.id);
   try {
     const problem = await prisma.problem.findUnique({
@@ -45,7 +45,7 @@ export const postProblem = async (req: CustomRequest, res: Response) => {
       },
     });
 
-    console.log(problem.id);
+    // console.log(problem.id);
     res.status(200).json({ id: problem.id });
   } catch (e) {
     console.log(e);

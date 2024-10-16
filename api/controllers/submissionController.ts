@@ -9,9 +9,9 @@ import { prisma } from "..";
 export const getSubmissions = async (req: CustomRequest, res: Response) => {
   const userId = req.userId;
   const problemId = parseInt(req.body.problem_id);
-  console.log("getSubmissions", userId, problemId);
+  // console.log("getSubmissions", userId, problemId);
   try {
-    console.log("here");
+    // console.log("here");
     const submissions = await prisma.submission.findMany({
       where: {
         userId,
@@ -21,7 +21,7 @@ export const getSubmissions = async (req: CustomRequest, res: Response) => {
         submittedOn: "desc",
       },
     });
-    console.log(submissions);
+    // console.log(submissions);
     res.status(200).json(submissions);
   } catch (e) {
     console.log(e);

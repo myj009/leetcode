@@ -17,7 +17,6 @@ import { useTheme } from "next-themes";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   const [user] = useUserState();
-  console.log(user);
   const router = useRouter();
   const { theme } = useTheme();
   if (user) {

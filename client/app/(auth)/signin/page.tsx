@@ -26,7 +26,6 @@ const page: React.FC = () => {
   const onSignin = async () => {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
-    console.log(email);
     if (!email || !password) {
       launchToast("Please fill all fields");
       return;
@@ -47,7 +46,6 @@ const page: React.FC = () => {
       window.localStorage.setItem("user", JSON.stringify(userData));
 
       setUser(userData);
-      console.log(userData.language);
       setLanguage(userData.language);
       setIsLoading(false);
       router.push("/problems");

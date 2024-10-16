@@ -15,7 +15,10 @@ const port = process.env.PORT || 3001;
 export const prisma = new PrismaClient();
 
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
+};
+app.use(cors(corsOptions));
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
 app.use("/problems", problemRoute);
@@ -27,5 +30,5 @@ app.get("/test", (req: Request, res: Response) => {
 receiveFromQueue();
 
 app.listen(port, function () {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });

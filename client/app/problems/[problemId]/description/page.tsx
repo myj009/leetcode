@@ -37,7 +37,6 @@ const ProblemDescription: React.FC<ProblemProps> = ({ params }) => {
 
         const data = res.data as ProblemSchema;
         data.testCases = JSON.parse(res.data.testCases);
-        console.log(data);
         setData(data);
       })
       .catch((err) => {
